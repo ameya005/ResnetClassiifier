@@ -167,6 +167,7 @@ def train(args):
         if val_loss <= best_val_loss:
             resnet.save_model(args.outdir)
             print('Saving model at epoch {}, path {}.'.format(epoch, args.outdir))
+            best_val_loss = val_loss
 
 
 def main():
