@@ -53,7 +53,7 @@ class ResNet(nn.Module):
 
     def save_model(self, path):
         path = os.path.join(path, 'resmodel.pth')
-        sd = self.res_model.state_dict
+        sd = self.res_model.state_dict()
         output_dict = {'rtype': self.rtype,
                        'n_classes': self.n_classes, 'model_state_dict': sd}
         torch.save(output_dict, path)
@@ -146,7 +146,7 @@ def train(args):
             labels = labels.to(device)
             optim.zero_grad()
             preds = resnet(imgs)
-            loss = loss_fn(preds, labels)
+            loss = loss_fn(preds, labels).mean()
             loss.backward()
             optim.step()
             # if idx == 10:
