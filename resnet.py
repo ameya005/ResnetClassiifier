@@ -15,7 +15,7 @@ from torchvision.datasets import ImageFolder
 _RES_MODELS = {
     'resnet18': tv.models.resnet18, 'resnet34': tv.models.resnet34, 'resnet50': tv.models.resnet50, 'resnet101': tv.models.resnet101,
     'resnet152': tv.models.resnet152, 'resnext50_32x4d': tv.models.resnext50_32x4d, 'resnext101_32x8d': tv.models.resnext101_32x8d,
-    'wide_resnet50_2': tv.models.wide_resnet50_2, 'wide_resnet101_2': tv.models.wide_resnet101_2
+    'wide_resnet50_2': tv.models.wide_resnet50_2, 'wide_resnet101_2': tv.models.wide_resnet101_2 , 'mobilenet': tv.models.mobilenet_v2
 }
 
 
@@ -87,7 +87,7 @@ def get_data_loader(path, batch_size=16, mode='train'):
         tv.transforms.Resize(size=(128, 128)),
         tv.transforms.RandomHorizontalFlip(p=0.5),
         tv.transforms.ToTensor(),
-        tv.transforms.Normalize(mean=(0,0,0), std=(255., 255., 255.), inplace=True),
+    #    tv.transforms.Normalize(mean=(0,0,0), std=(255., 255., 255.), inplace=True),
     ])
     ds = ImageFolder(path, transform=transforms)
     if mode == 'train':
@@ -126,7 +126,8 @@ def train(args):
     Train a resnet
     """
     args.outdir = get_next_run(args.outdir)
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    #device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cpu')
     resnet = ResNet(args.nclasses, args.rtype)
     resnet = resnet.to(device)
     optim = torch.optim.Adam(params=resnet.parameters(), lr=1e-3)
@@ -178,7 +179,7 @@ def main():
         '--outdir', '-o', help='Path to output directory', default='.')
     parser.add_argument('--rtype', '-rt', help='Type of Resnet', choices=['resnet18', 'resnet34', 'resnet50', 'resnet101',
                                                                           'resnet152', 'resnext50_32x4d', 'resnext101_32x8d',
-                                                                          'wide_resnet50_2', 'wide_resnet101_2'], default='resnet34')
+                                                                          'wide_resnet50_2', 'wide_resnet101_2', 'mobilenet'], default='resnet34')
     parser.add_argument('--nclasses', '-n', help='No. of Classes', default=3, type=int)
     parser.add_argument('--dname', '-dn', help='Name of dataset',
                         choices=['BDD'], default='BDD')
